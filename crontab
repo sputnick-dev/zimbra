@@ -1,0 +1,115 @@
+30 2 * * * find /opt/zimbra/log/ -type f -name \*.log\* -mtime +8 -exec rm {} \; > /dev/null 2>&1
+35 2 * * * find /opt/zimbra/log/ -type f -name \*.out.???????????? -mtime +8 -exec rm {} \; > /dev/null 2>&1
+#
+# compress logs manually to avoid application pauses when
+# handled through the log4j thread
+#
+50 2 * * * /opt/zimbra/libexec/zmcompresslogs > /dev/null 2>&1
+#
+# tmp dir cleaning
+#
+40 2 * * * /opt/zimbra/libexec/zmcleantmp
+#
+# Status logging
+#
+#*/2 * * * * /opt/zimbra/libexec/zmstatuslog > /dev/null 2>&1
+#*/10 * * * * /opt/zimbra/libexec/zmdisklog > /dev/null 2>&1
+#
+# SSL Certificate Expiration Checks
+#
+#0 0 1 * * /opt/zimbra/libexec/zmcheckexpiredcerts -days 30 -email
+#
+# Backups
+#
+# BACKUP BEGIN
+# BACKUP END
+#
+# crontab.ldap
+#
+# Monitor MDB database size
+30 4 * * * /opt/zimbra/libexec/zmldapmonitordb > /dev/null 2>&1
+#
+#
+# crontab.store
+#
+# Log pruning
+#
+30 2 * * * find /opt/zimbra/mailboxd/logs/ -type f -name \*log\* -mtime +8 -exec rm {} \; > /dev/null 2>&1
+30 2 * * * find /opt/zimbra/log/ -type f -name stacktrace.\* -mtime +8 -exec rm {} \; > /dev/null 2>&1
+#
+# Report on any database inconsistencies
+#
+0 23 * * 7 /opt/zimbra/libexec/zmdbintegrityreport -m
+#
+# Monitor for multiple mysqld to prevent corruption
+#
+#*/5 * * * * /opt/zimbra/libexec/zmcheckduplicatemysqld -e > /dev/null 2>&1
+#
+# Check zimbraVersionCheckURL for new update.
+# Only runs if this server matches zimbraVersionCheckServer
+# Only executes on zimbraVersionCheckInterval. min 2h interval
+#
+18 8 * * 1 /opt/zimbra/libexec/zmcheckversion -c >> /dev/null 2>&1
+#
+# Invoke "ComputeAggregateQuotaUsageRequest" periodically
+#
+#15 2 * * * /opt/zimbra/libexec/zmcomputequotausage > /dev/null 2>&1
+#
+# Invoke "client_usage_report.py" periodically to process /opt/zimbra/log/access_log* files
+#
+#55 1 * * * /opt/zimbra/libexec/client_usage_report.py > /dev/null 2>&1
+#
+# Run zmgsaupdate util to trickeSync galsync accounts
+#
+49 0 * * 7 /opt/zimbra/libexec/zmgsaupdate > /dev/null 2>&1
+#
+# crontab.logger
+#
+# process logs
+#
+#00,10,20,30,40,50 * * * * /opt/zimbra/libexec/zmlogprocess > /tmp/logprocess.out 2>&1
+#
+# Graph generation
+#
+#10 * * * * /opt/zimbra/libexec/zmgengraphs >> /tmp/gengraphs.out 2>&1
+#
+# Daily reports
+#
+#30 23 * * * /opt/zimbra/libexec/zmdailyreport -m
+#
+# crontab.mta
+#
+#
+# Queue logging
+#
+10,30,50 * * * * /opt/zimbra/libexec/zmqueuelog
+#
+# Spam training
+#
+#0 22 * * * /opt/zimbra/bin/zmtrainsa >> /opt/zimbra/log/spamtrain.log 2>&1
+#
+# Spam training cleanup
+#
+#45 23 * * * /opt/zimbra/bin/zmtrainsa --cleanup >> /opt/zimbra/log/spamtrain.log 2>&1
+#
+# Spam rule updates
+#
+#45 0 * * * . /opt/zimbra/.bashrc; /opt/zimbra/libexec/zmsaupdate
+#
+# Dspam cleanup
+#
+#0 1 * * * [ -d /opt/zimbra/data/dspam/data/z/i/zimbra/zimbra.sig ] && find /opt/zimbra/data/dspam/data/z/i/zimbra/zimbra.sig/ -type f -name \*sig -mtime +7 -exec rm {} \; > /dev/null 2>&1
+#8 4 * * * [ -f /opt/zimbra/data/dspam/system.log ] && /opt/zimbra/dspam/bin/dspam_logrotate -a 60 -l /opt/zimbra/data/dspam/system.log
+#8 8 * * * [ -f /opt/zimbra/data/dspam/data/z/i/zimbra/zimbra.log ] && /opt/zimbra/dspam/bin/dspam_logrotate -a 60 -l /opt/zimbra/data/dspam/data/z/i/zimbra/zimbra.log
+#
+# Spam Bayes auto-expiry
+#
+#20 23 * * * /opt/zimbra/libexec/sa-learn -p /opt/zimbra/conf/salocal.cf --dbpath /opt/zimbra/data/amavisd/.spamassassin --siteconfigpath /opt/zimbra/conf/spamassassin --force-expire --sync > /dev/null 2>&1
+#
+# Clean up amavisd/tmp
+#
+#15 5,20 * * * find /opt/zimbra/data/amavisd/tmp -maxdepth 1 -type d -name 'amavis-*' -mtime +1 -exec rm -rf {} \; > /dev/null 2>&1
+#
+# Clean up the quarantine dir
+#
+#0 1 * * * find /opt/zimbra/data/amavisd/quarantine -type f -mtime +7 -exec rm -f {} \; > /dev/null 2>&1
