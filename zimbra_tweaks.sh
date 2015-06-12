@@ -1,4 +1,5 @@
 su - zimbra -c /bin/bash<<EOF
+host=$(zmhostname)
 [[ -s /opt/zimbra/old_zmlocalconfig ]] || zmlocalconfig > /opt/zimbra/old_zmlocalconfig
 
 set -x
@@ -16,12 +17,13 @@ zmlocalconfig -e ldap_common_thread=4
 zmlocalconfig -e ldap_db_cachesize=2
 zmlocalconfig -e ldap_db_idlcachesize=6
 zmlocalconfig -e ldap_cache_domain_maxsize=1
-zmprov -l ms sputnick.fr -zimbraServiceEnabled amavis
-zmprov -l ms sputnick.fr -zimbraServiceEnabled logger
-zmprov -l ms sputnick.fr -zimbraServiceEnabled antispam
-zmprov -l ms sputnick.fr -zimbraServiceEnabled antivirus
-zmprov -l ms sputnick.fr -zimbraServiceEnabled opendkim
-zmprov -l ms sputnick.fr -zimbraServiceEnabled stats
-zmprov -l ms sputnick.fr zimbraHttpNumThreads 18
-zmprov -l ms sputnick.fr zimbraLmtpNumThreads 2
+
+zmprov -l ms $host -zimbraServiceEnabled amavis
+zmprov -l ms $host -zimbraServiceEnabled logger
+zmprov -l ms $host -zimbraServiceEnabled antispam
+zmprov -l ms $host -zimbraServiceEnabled antivirus
+zmprov -l ms $host -zimbraServiceEnabled opendkim
+zmprov -l ms $host -zimbraServiceEnabled stats
+zmprov -l ms $host zimbraHttpNumThreads 18
+zmprov -l ms $host zimbraLmtpNumThreads 2
 EOF
