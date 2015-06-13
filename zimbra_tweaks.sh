@@ -1,4 +1,4 @@
-su - zimbra -c /bin/bash<<EOF
+su - zimbra -c /bin/bash<<'EOF'
 source ~/bin/zmshutil
 zmsetvars
 host=$(zmhostname)
