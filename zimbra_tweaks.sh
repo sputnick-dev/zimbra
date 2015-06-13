@@ -1,4 +1,6 @@
 su - zimbra -c /bin/bash<<EOF
+source ~/bin/zmshutil
+zmsetvars
 host=$(zmhostname)
 [[ -s /opt/zimbra/old_zmlocalconfig ]] || zmlocalconfig > /opt/zimbra/old_zmlocalconfig
 
