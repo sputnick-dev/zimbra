@@ -19,6 +19,12 @@ zmlocalconfig -e ldap_common_thread=4
 zmlocalconfig -e ldap_db_cachesize=2
 zmlocalconfig -e ldap_db_idlcachesize=6
 zmlocalconfig -e ldap_cache_domain_maxsize=1
+zmlocalconfig -e ldap_common_loglevel=0
+zmlocalconfig -e ldap_common_toolthreads=1
+zmlocalconfig -e ldap_db_maxsize=5120000000
+zmlocalconfig -e ldap_accesslog_maxsize=5120000000
+zmlocalconfig -e ldap_overlay_accesslog_logpurge="01+00:00  00+12:00"
+zmlocalconfig -e ldap_overlay_syncprov_checkpoint="50 60"
 
 zmprov -l ms $host -zimbraServiceEnabled amavis
 zmprov -l ms $host -zimbraServiceEnabled logger
@@ -26,6 +32,9 @@ zmprov -l ms $host -zimbraServiceEnabled antispam
 zmprov -l ms $host -zimbraServiceEnabled antivirus
 zmprov -l ms $host -zimbraServiceEnabled opendkim
 zmprov -l ms $host -zimbraServiceEnabled stats
+
 zmprov -l ms $host zimbraHttpNumThreads 18
-zmprov -l ms $host zimbraLmtpNumThreads 2
+zmprov -l ms $host zimbraLmtpNumThreads 5
+
+zmprov mcf zimbraMtaRecipientDelimiter +
 EOF
