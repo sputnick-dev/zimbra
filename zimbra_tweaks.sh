@@ -5,6 +5,7 @@ host=$(zmhostname)
 
 set -x
 
+zmlocalconfig -e ssl_allow_untrusted_certs=true
 zmlocalconfig -e mysql_table_cache=250
 zmlocalconfig -e mysql_memory_percent=10
 zmlocalconfig -e zmmtaconfig_interval=86400
