@@ -40,4 +40,11 @@ zmprov -l ms $host zimbraHttpNumThreads 18
 zmprov -l ms $host zimbraLmtpNumThreads 5
 
 zmprov mcf zimbraMtaRecipientDelimiter +
+
+# anti spam
+zmlocalconfig -e 'postfix_disable_vrfy_command=yes'
+zmlocalconfig -e 'postfix_smtpd_delay_reject=yes'
+zmlocalconfig -e 'postfix_smtpd_helo_required=yes'
+zmlocalconfig -e 'postfix_smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject_unauth_destinationreject_unauth_pipelining,check_client_accesshash:/etc/postfix/rbl_override,reject_unknown_reverse_client_hostname,reject_invalid_helo_hostname,reject_non_fqdn_hostname,reject_non_fqdn_helo_hostname,reject_non_fqdn_sender,reject_non_fqdn_recipient,reject_unknown_sender_domain,reject_unknown_recipient_domain,reject_invalid_hostname,check_client_accesshash:/etc/postfix/client_checks,reject_rbl_clientzen.spamhaus.org,reject_rbl_clientbl.spamcop.net,reject_rbl_clientb.barracudacentral.org,reject_rbl_clientdnsbl.sorbs.net,check_policy_serviceunix:private/policy,permit'
+zmlocalconfig -e 'postfix_smtpd_helo_restrictions=permit_mynetworks,reject_non_fqdn_hostname,reject_invalid_hostname,permit'
 EOF
